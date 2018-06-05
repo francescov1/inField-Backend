@@ -1,4 +1,5 @@
 const config = require('./config.js');
+const util = require('util');
 
 var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
@@ -11,7 +12,7 @@ const threshold = 0.6;
 
 const watson = {
 
-  classifyImage: function(image, classifierIds) {
+  classifyImage: function(image, classifierIds, cb) {
 
     var params = {
       classifier_ids: classifierIds,
@@ -23,17 +24,14 @@ const watson = {
     else
       params['images_file'] = image;
 
-    return visualRecognition.classify(params);
+    visualRecognition.classify(params, cb);
   },
 
-  getClassifiers: function(fetchDetails = true) {
-
-    return visualRecognition.listClassifiers({
-      verbose: fetchDetails
-    });
+  getClassifiers: function(fetchDetails = true, cb) {
+    visualRecognition.listClassifiers({verbose: fetchDetails}, cb);
   },
 
-  updateModel: function(posClassNames, posFiles, negFiles, classifierId) {
+  updateModel: function(posClassNames, posFiles, negFiles, classifierId, cb) {
 
     if (posClassNames.length !== posFiles.length) {
       console.log('Positive class name and file arrays must be of equal lengths');
@@ -49,11 +47,11 @@ const watson = {
       params[`${posClassNames[i]}_positive_example`] = posFiles[i];
     }
 
-    return visualRecognition.updateClassifier(params);
+    visualRecognition.updateClassifier(params, cb);
   },
 
-  downloadCoreMlModel: function(classifierId) {
-    return visualRecognition.getCoreMlModel({classifier_id: classifierId});
+  downloadCoreMlModel: function(classifierId, cb) {
+    visualRecognition.getCoreMlModel({classifier_id: classifierId}, cb);
   }
 
 }

@@ -1,47 +1,52 @@
+const util = require('util');
 const express = require('express');
-const multer = require('multer');
-const upload = multer();
-
 const watson = require('../watson-services.js');
 
 var router = express.Router();
 
+
 // classify an image
-router.post('classify', upload.single('image'), (req, res, next) => {
+router.post('/classify', (req, res, next) => {
   const body = req.body;
-  const image = req.image;
-  if (!image) {
-    console.log('No image found');
-    return;
-  }
-  if (!body || !body.classifierIds) {
-    console.log('No classifier Ids found');
-    return;
+
+  if (!body) {
+    console.log('No image data found');
+    return res.status(400).send({error: 'No image data found'});
   }
 
-  watson.classifyImage(image, body.classifierIds)
-    .then(results => {
-      console.log(util.inspect(results, false, null));
-      return res.status(200).send(results);
-    })
-    .catch(err => {
+  return watson.classifyImage(body.image, body.classifierIds || ['default'], (err, results) => {
+    if (err) {
       console.log('Error with Watson:\n' + err);
-      return;
-    });
+      return res.status(400).send({error: 'Error with Watson'});
+    }
+    
+    return res.status(200).send(results);
+  });
+
 })
 
 // get models
-router.get('classifiers', (req, res, next) => {
+router.get('/classifiers', (req, res, next) => {
+
+  watson.getClassifiers(true, (err, results) => {
+    if (err) {
+      console.log('Error with Watson:\n' + err);
+      return res.status(400).send({error: 'Error with Watson'});
+    }
+
+    console.log(util.inspect(results, false, null));
+    return res.status(200).send(results);
+  });
 
 })
 
 // update model
-router.put('classifiers', (req, res, next) => {
+router.put('/classifiers', (req, res, next) => {
 
 })
 
 // download CoreMlModel
-router.get('coreMlModels/:classifierId', (req, res, next) => {
+router.get('/coreMlModels/:classifierId', (req, res, next) => {
 
 })
 
