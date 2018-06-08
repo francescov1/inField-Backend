@@ -23,7 +23,12 @@ router.post('/classify', (req, res, next) => {
     image = new Buffer(matches[2], 'base64');
   }
 
+  // log time to make image prediction
+  console.time("watsonVisualRecognitionCall");
+
   return watson.classifyImage(image, body.classifierIds || ['default'], (err, results) => {
+
+    console.timeEnd("watsonVisualRecognitionCall");
 
     if (err)
       return next(err);
