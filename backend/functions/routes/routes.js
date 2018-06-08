@@ -8,45 +8,64 @@ var router = express.Router();
 // classify an image
 router.post('/classify', (req, res, next) => {
   const body = req.body;
+  if (!body || (!body.imageUrl && !body.imageBase64))
+    return next('No data');
 
-  if (!body) {
-    console.log('No image data found');
-    return res.status(400).send({error: 'No image data found'});
+  let image;
+  if (body.imageUrl)
+    image = body.imageUrl;
+  else {
+    // regex pattern to remove extra info from string
+    const matches = body.imageBase64.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+    if (matches.length !== 3)
+      return next('Image must be encoded in base64');
+
+    image = new Buffer(matches[2], 'base64');
   }
 
-  return watson.classifyImage(body.image, body.classifierIds || ['default'], (err, results) => {
-    if (err) {
-      console.log('Error with Watson:\n' + err);
-      return res.status(400).send({error: 'Error with Watson'});
-    }
-    
+  return watson.classifyImage(image, body.classifierIds || ['default'], (err, results) => {
+
+    if (err)
+      return next(err);
+
     return res.status(200).send(results);
   });
-
 })
 
 // get models
 router.get('/classifiers', (req, res, next) => {
 
   watson.getClassifiers(true, (err, results) => {
-    if (err) {
-      console.log('Error with Watson:\n' + err);
-      return res.status(400).send({error: 'Error with Watson'});
-    }
 
-    console.log(util.inspect(results, false, null));
+    if (err)
+      return next(err);
+
     return res.status(200).send(results);
   });
-
 })
 
 // update model
 router.put('/classifiers', (req, res, next) => {
 
+  watson.updateModel(posClassNames, posFiles, negFiles, classifierId, (err, results) => {
+
+    if (err)
+      return next(err);
+
+    return res.status(200).send(results);
+  });
 })
 
 // download CoreMlModel
 router.get('/coreMlModels/:classifierId', (req, res, next) => {
+
+  watson.downloadCoreMlModel(classifierId, (err, results) => {
+
+    if (err)
+      return next(err);
+
+    return res.status(200).send(results);
+  });
 
 })
 

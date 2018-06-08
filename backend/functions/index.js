@@ -6,15 +6,14 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const securityMiddleware = require('./middleware/security-middleware.js');
 const routes = require('./routes/routes.js');
-//const errorMiddleware = require('./middleware/error-middleware.js');
+const errorMiddleware = require('./middleware/error-middleware.js');
 var app = express();
 
-//app.use(bodyParser.json());
-app.use(bodyParser.raw());
+app.use(bodyParser.json());
 
 app.use('/api', securityMiddleware);
 app.use('/api', routes);
-//app.use(errorMiddleware);
+app.use('/api', errorMiddleware);
 
 app.all('*', (req, res) => {
   return res.sendFile('api-landing-page.html', {root: __dirname })
