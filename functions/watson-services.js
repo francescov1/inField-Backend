@@ -8,11 +8,9 @@ var visualRecognition = new VisualRecognitionV3({
   iam_apikey: config.watson.iam_apikey
 });
 
-const threshold = 0.6;
-
 const watson = {
 
-  classifyImage: function(image, classifierIds, cb) {
+  classifyImage: function(image, classifierIds, threshold, cb) {
 
     var params = {
       classifier_ids: classifierIds,
@@ -50,6 +48,8 @@ const watson = {
     visualRecognition.updateClassifier(params, cb);
   },
 
+  // guide for storing downloaded model:
+  // https://developer.apple.com/documentation/coreml/core_ml_api/downloading_and_compiling_a_model_on_the_user_s_device
   downloadCoreMlModel: function(classifierId, cb) {
     visualRecognition.getCoreMlModel({classifier_id: classifierId}, cb);
   }

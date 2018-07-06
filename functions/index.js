@@ -9,8 +9,6 @@ const routes = require('./routes/routes.js');
 const errorMiddleware = require('./middleware/error-middleware.js');
 var app = express();
 
-app.use(bodyParser.json());
-
 app.use('/api', securityMiddleware);
 app.use('/api', routes);
 app.use('/api', errorMiddleware);
