@@ -28,7 +28,7 @@ router.post('/classify', (req, res, next) => {
   });
 
   busboy.on('field', (fieldname, value, fieldnameTruncated, valueTruncated, encoding, mimetype) => {
-    
+
     if (fieldname === 'threshold')
       threshold = value;
     else if (fieldname === 'model')
@@ -41,7 +41,6 @@ router.post('/classify', (req, res, next) => {
     console.time("watsonVisualRecognitionCall");
     const image = fs.createReadStream(filePath);
 
-// change to take in string
     return watson.classifyImage(image, [model] || ['default'], threshold, (err, results) => {
       console.timeEnd("watsonVisualRecognitionCall");
 
