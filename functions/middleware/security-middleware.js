@@ -1,7 +1,6 @@
 const config = require('../config.js');
 const debug = config.env.debug;
 const debugToken = config.env.debug_token;
-
 var admin = config.firebase.admin;
 
 const express = require('express');

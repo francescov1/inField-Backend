@@ -1,8 +1,6 @@
 'use strict';
 const functions = require('firebase-functions');
-
 const bodyParser = require('body-parser');
-
 const express = require('express');
 const securityMiddleware = require('./middleware/security-middleware.js');
 const routes = require('./routes/routes.js');
