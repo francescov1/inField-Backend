@@ -41,17 +41,7 @@ router.post('/classify', (req, res, next) => {
     console.time("watsonVisualRecognitionCall");
     const image = fs.createReadStream(filePath);
 
-    return watson.classifyImage(image, [model] || ['default'], threshold, (err, results) => {
-      console.timeEnd("watsonVisualRecognitionCall");
-
-      fs.unlinkSync(filePath);
-
-      if (err)
-        return next(err);
-
-      classifications = results.images[0].classifiers;
-      return res.status(200).send(classifications);
-    });
+    // call python, return result
   });
 
   busboy.end(req.rawBody);
