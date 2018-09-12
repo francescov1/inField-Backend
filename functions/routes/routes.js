@@ -1,9 +1,10 @@
 const util = require('util');
 const Busboy = require('busboy');
+const axios = require('axios');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
-const spawn = require('child_process').spawn;
+const config = require('../config');
 
 const express = require('express');
 const watson = require('../watson-services.js');
@@ -41,16 +42,12 @@ router.post('/classify', (req, res, next) => {
     // log time to make image prediction
     console.time('predictionCall');
 
-    // call python, return result
-    const pythonProcess = spawn('python', [`${__dirname}/../test.py`, 1, 2, 3]);
-
-    pythonProcess.stdout.on('data', (data) => {
-      console.time('predictionCall')
-      console.log('data from node: ' + data);
-      return res.status(200).send({ data: data.toString() });
-    });
-
-    pythonProcess.stderr.on('data', (data) => next(data.toString()));
+    return axios.get(config.model.api_base_url)
+      .then(results => {
+        console.time('predictionCall');
+        return res.status(200).send(results.data);
+      })
+      .catch(err => next(err));
   });
 
   busboy.end(req.rawBody);

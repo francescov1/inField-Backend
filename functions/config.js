@@ -13,5 +13,6 @@ module.exports = {
     db: admin.database()
   },
   env: functions.config().env,
-  watson: functions.config().watson
+  watson: functions.config().watson,
+  model: functions.config().model
 };
