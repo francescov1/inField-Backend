@@ -1,5 +1,6 @@
 const util = require('util');
 const Busboy = require('busboy');
+const FormData = require('form-data');
 const axios = require('axios');
 const path = require('path');
 const os = require('os');
@@ -11,6 +12,7 @@ const watson = require('../watson-services.js');
 var router = express.Router();
 
 // classify an image
+// TODO: take raw data and send right to python rather than unpacking and repacking
 router.post('/classify', (req, res, next) => {
 
   const busboy = new Busboy({ headers: req.headers });
@@ -38,16 +40,27 @@ router.post('/classify', (req, res, next) => {
   busboy.on('finish', () => {
 
     const image = fs.createReadStream(filePath);
-
+    var formData = new FormData();
+    formData.append('image', image);
     // log time to make image prediction
     console.time('predictionCall');
 
-    return axios.get(config.model.api_base_url)
-      .then(results => {
-        console.time('predictionCall');
-        return res.status(200).send(results.data);
-      })
-      .catch(err => next(err));
+    return axios.post(`${config.model.api_base_url}/predict`, formData, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(results => {
+      console.log('success!')
+      console.time('predictionCall');
+      return res.status(200).send(results.data);
+    })
+    .catch(err => {
+      console.log('ERRORR FUCK')
+    //  console.log(err)
+      return next(err)
+    });
   });
 
   busboy.end(req.rawBody);
