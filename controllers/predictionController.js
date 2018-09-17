@@ -1,34 +1,35 @@
 'use strict';
-
-// TODO: everything
+const config = require('../config/main');
+const axios = require('axios');
+const FormData = require('form-data');
+const { NoDataError } = require('../errors/custom');
 
 module.exports = {
 
-  classifySpecies: function(req, res, next) {
+  classifyClickSpecies: function(req, res, next) {
 
   },
 
-  classifyFamily: function(req, res, next) {
-    console.log('families called, req.file: ');
-    console.log(req.file)
+  classifyBeetleFamily: function(req, res, next) {
+    if (!req.file)
+      throw new NoDataError('No image provided');
 
-    return res.status(200).send(req.file);
-/*
     var formData = new FormData();
-    formData.append('image', image);
+    formData.append('image', req.file.buffer, {
+      filename: 'image.png'
+    });
 
     return axios.post(`${config.model.api_base_url}/predict`, formData, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: formData.getHeaders()
     })
     .then(results => {
-      console.log('success!')
-      return res.status(200).send(results.data);
+      return res.status(200).send({ prediction: results.data });
     })
-    .catch(err => next(err));
-  */
+    .catch(err => {
+  //    console.log(err)
+      next(err)
+    });
+
   }
 
 };

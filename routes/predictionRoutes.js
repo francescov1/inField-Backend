@@ -6,7 +6,7 @@ const upload = multer()
 var predictionRouter = express.Router();
 
 predictionRouter.use(upload.single('image'));
-predictionRouter.post('/species', predictionController.classifySpecies);
-predictionRouter.post('/families', predictionController.classifyFamily);
+predictionRouter.post('/beetles/family', predictionController.classifyBeetleFamily);
+predictionRouter.post('/beetles/click/species', predictionController.classifyClickSpecies);
 
 module.exports = predictionRouter;
