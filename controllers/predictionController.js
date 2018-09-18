@@ -7,6 +7,22 @@ const { NoDataError } = require('../errors/custom');
 module.exports = {
 
   classifyClickSpecies: function(req, res, next) {
+    if (!req.file)
+      throw new NoDataError('No image provided');
+
+    var formData = new FormData();
+    formData.append('image', req.file.buffer, {
+      filename: 'image.png'
+    });
+
+    return axios.post(`${config.model.api_base_url}/beetles/click`, formData, {
+      headers: formData.getHeaders()
+    })
+    .then(results => res.status(200).send({ prediction: results.data }))
+    .catch(err => {
+      // console.log(err)
+      next(err)
+    });
 
   },
 
@@ -19,16 +35,11 @@ module.exports = {
       filename: 'image.png'
     });
 
-    return axios.post(`${config.model.api_base_url}/predict`, formData, {
+    return axios.post(`${config.model.api_base_url}/beetles/family`, formData, {
       headers: formData.getHeaders()
     })
-    .then(results => {
-      return res.status(200).send({ prediction: results.data });
-    })
-    .catch(err => {
-  //    console.log(err)
-      next(err)
-    });
+    .then(results => res.status(200).send({ prediction: results.data }))
+    .catch(err => next(err));
 
   }
 

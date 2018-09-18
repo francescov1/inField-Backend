@@ -7,6 +7,6 @@ var predictionRouter = express.Router();
 
 predictionRouter.use(upload.single('image'));
 predictionRouter.post('/beetles/family', predictionController.classifyBeetleFamily);
-predictionRouter.post('/beetles/click/species', predictionController.classifyClickSpecies);
+predictionRouter.post('/beetles/click', predictionController.classifyClickSpecies);
 
 module.exports = predictionRouter;
