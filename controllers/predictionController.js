@@ -20,7 +20,7 @@ module.exports = {
     })
     .then(results => res.status(200).send({ prediction: results.data }))
     .catch(err => {
-      // console.log(err)
+      console.log(err)
       next(err)
     });
 
