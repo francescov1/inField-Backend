@@ -1,7 +1,6 @@
 'use strict';
 const config = require('../config/main');
-const axios = require('axios');
-const FormData = require('form-data');
+const rp = require('request-promise');
 const { NoDataError } = require('../errors/custom');
 
 module.exports = {
@@ -10,37 +9,47 @@ module.exports = {
     if (!req.file)
       throw new NoDataError('No image provided');
 
-    var formData = new FormData();
-    formData.append('image', req.file.buffer, {
-      filename: 'image.png'
-    });
+    const options = {
+      method: 'POST',
+      uri: `${config.model.api_base_url}/beetles/click`,
+      formData: {
+        file: {
+          value: req.file.buffer,
+          options: {
+            filename: 'image.jpg',
+            contentType: 'image/jpg'
+          }
+        }
+      },
+      headers: { 'content-type': 'multipart/form-data' }
+    };
 
-    return axios.post(`${config.model.api_base_url}/beetles/click`, formData, {
-      headers: formData.getHeaders()
-    })
-    .then(results => res.status(200).send({ prediction: results.data }))
-    .catch(err => {
-      console.log(err)
-      next(err)
-    });
-
+    return rp(options)
+      .then(results => res.status(200).send({ prediction: results }))
+      .catch(err => next(err));
   },
 
   classifyBeetleFamily: function(req, res, next) {
     if (!req.file)
       throw new NoDataError('No image provided');
 
-    var formData = new FormData();
-    formData.append('image', req.file.buffer, {
-      filename: 'image.png'
-    });
+    const options = {
+      method: 'POST',
+      uri: `${config.model.api_base_url}/beetles/family`,
+      formData: {
+        file: {
+          value: req.file.buffer,
+          options: {
+            filename: 'image.jpg',
+            contentType: 'image/jpg'
+          }
+        }
+      },
+      headers: { 'content-type': 'multipart/form-data' }
+    };
 
-    return axios.post(`${config.model.api_base_url}/beetles/family`, formData, {
-      headers: formData.getHeaders()
-    })
-    .then(results => res.status(200).send({ prediction: results.data }))
-    .catch(err => next(err));
-
+    return rp(options)
+      .then(results => res.status(200).send({ prediction: results }))
+      .catch(err => next(err));
   }
-
 };
