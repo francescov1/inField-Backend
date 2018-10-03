@@ -9,7 +9,8 @@ module.exports = {
 
   apiAuth: function(req, res, next) {
     console.log('------ CONFIG ------')
-    console.log(config)
+    console.log(config.auth_token)
+    console.log(req.headers['auth_token'])
     const authToken = req.headers['auth_token'];
     if (!authToken || authToken !== config.auth_token)
       throw new UnauthorizedError('Authentication token required');
