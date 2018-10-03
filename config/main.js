@@ -5,6 +5,5 @@ module.exports = {
   },
   'auth_token': process.env.AUTH_TOKEN,
   'node_env': process.env.NODE_ENV || 'development',
-  'api_url': process.env.API_URL,
   'port': process.env.PORT || 3000
 };
