@@ -1,11 +1,24 @@
 'use strict';
 require('dotenv').config();
+Promise = require('bluebird');
 const config = require('./config/main');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const express = require('express');
 const router = require('./router');
-Promise = require('bluebird');
+const mongoose = require('mongoose');
+mongoose.Promise = Promise;
+
+mongoose.connect(config.database, { useNewUrlParser: true });
+mongoose.connection.on("connected", () => console.log("mongodb connected"));
+mongoose.connection.on("open", () => console.log("mongodb connection opened"));
+mongoose.connection.on("error", err => console.log("mongodb error: " + err));
+mongoose.connection.on("disconnected", () => {
+  console.log("mongodb disconnected");
+});
+process.on("SIGINT", () => {
+  mongoose.connection.close(() => process.exit(0));
+});
 
 const app = express();
 
@@ -24,5 +37,7 @@ app.use(bodyParser.json());
 
 router(app);
 
-app.listen(config.port);
-console.log('Server listening on port ' + config.port + '...');
+app.listen(config.port, () => {
+  console.log('Server listening on port ' + config.port + '...');
+  console.log('Environment: ' + config.node_env)
+});
