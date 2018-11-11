@@ -33,7 +33,7 @@
     "request-promise": "^4.2.2"
   },
   "engines": {
-    "node": "8.1.4",
+    "node": "11.1.0",
     "npm": "6.4.1"
   }
 }

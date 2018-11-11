@@ -1,6 +1,7 @@
 'use strict';
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
-
+// TODO: figure out how to add variables to aws
+//if (process.env.NODE_ENV !== "production") require("dotenv").config();
+require("dotenv").config();
 module.exports = {
   model: {
     api_base_url: process.env.MODEL_API_BASE_URL
