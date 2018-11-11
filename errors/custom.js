@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 class AppError extends Error {
-  constructor (message, status) {
+  constructor(message, status) {
     super(message);
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
@@ -9,47 +9,54 @@ class AppError extends Error {
   }
 }
 
+class JwtExpiredError extends AppError {
+  constructor() {
+    super("JWT token expired", 403);
+  }
+}
+
 class UnauthorizedError extends AppError {
-  constructor (message) {
-    super(message || 'Unauthorized', 403);
+  constructor(message) {
+    super(message || "Unauthorized", 403);
   }
 }
 
 class NoDataError extends AppError {
-  constructor (message) {
-    super(message || 'No request data found', 400);
+  constructor(message) {
+    super(message || "No request data found", 400);
   }
 }
 
 class InvalidArgumentError extends AppError {
-  constructor (message) {
-    super(message || 'Invalid argument(s)', 400);
+  constructor(message) {
+    super(message || "Invalid argument(s)", 400);
   }
 }
 
 class NotFoundError extends AppError {
-  constructor (message) {
-    super(message || 'Requested resource not found', 404);
+  constructor(message) {
+    super(message || "Requested resource not found", 404);
   }
 }
 
 class NotAllowedError extends AppError {
-  constructor (message) {
-    super(message || 'Operation not allowed', 405);
+  constructor(message) {
+    super(message || "Operation not allowed", 405);
   }
 }
 
 class UnknownError extends AppError {
-  constructor (message) {
-    super(message || 'Unknown error, developers have been notified', 400);
+  constructor(message) {
+    super(message || "Unknown error, developers have been notified", 400);
   }
 }
 
 module.exports = {
-  UnauthorizedError: UnauthorizedError,
-  NoDataError: NoDataError,
-  InvalidArgumentError: InvalidArgumentError,
-  NotFoundError: NotFoundError,
-  NotAllowedError: NotAllowedError,
-  UnknownError: UnknownError
+  UnauthorizedError,
+  JwtExpiredError,
+  NoDataError,
+  InvalidArgumentError,
+  NotFoundError,
+  NotAllowedError,
+  UnknownError
 };

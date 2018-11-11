@@ -36,7 +36,10 @@ const UserSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     // TODO: input locations of models in db with coordinates, then find closest one when doing a query
-    location: { type: coordinates, required: true }
+    coordinates: {
+      type: [Number],
+      index: "2dsphere"
+    },
   },
   {
     timestamps: true

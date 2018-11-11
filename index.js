@@ -38,6 +38,6 @@ app.use(bodyParser.json());
 router(app);
 
 app.listen(config.port, () => {
-  console.log('Server listening on port ' + config.port + '...');
-  console.log('Environment: ' + config.node_env)
+  console.log('server listening on port ' + config.port + '...');
+  console.log('environment: ' + config.node_env)
 });
