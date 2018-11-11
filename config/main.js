@@ -1,4 +1,6 @@
 'use strict';
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
+
 module.exports = {
   model: {
     api_base_url: process.env.MODEL_API_BASE_URL

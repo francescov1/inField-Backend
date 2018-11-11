@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+require("./helpers/date");
 Promise = require('bluebird');
 const config = require('./config/main');
 const bodyParser = require('body-parser');

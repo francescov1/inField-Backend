@@ -20,7 +20,7 @@ module.exports = {
     if (!req.body) return next(new NoDataError());
     let user = req.user;
     const userEdits = req.body;
-
+    // TODO: add this as mongoose middleware
     if (
       userEdits.emailVerified ||
       userEdits.salt ||
@@ -39,8 +39,7 @@ module.exports = {
 
   // delete user
   deleteMe: function(req, res, next) {
-    return req.user
-      .remove()
+    return req.user.remove()
       .then(user => res.status(204).send({ success: true }))
       .catch(err => next(err));
   },
