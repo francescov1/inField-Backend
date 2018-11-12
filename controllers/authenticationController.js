@@ -44,6 +44,9 @@ module.exports = {
 
         const verificationToken = uuidv4();
 
+        // TODO: decide if user is farmer or agronomist and set on user
+        // could do middlware that checks what app is sending a request and sets users
+        // type accordingly
         let newUser = new User({
           email: email,
           password: password,

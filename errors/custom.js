@@ -9,6 +9,12 @@ class AppError extends Error {
   }
 }
 
+class RateLimitError extends AppError {
+  constructor(message) {
+    super(message || "Too many requests, please try again later", 429);
+  }
+}
+
 class JwtExpiredError extends AppError {
   constructor() {
     super("JWT token expired", 403);

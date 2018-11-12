@@ -10,8 +10,13 @@ module.exports = {
     secret: process.env.JWT_SECRET,
     expiry: process.env.JWT_EXPIRY
   },
+  rate_limit: {
+    api_window: process.env.API_RATE_LIMIT_WINDOW,
+    api_max: process.env.API_RATE_LIMIT_MAX,
+    auth_window: process.env.AUTH_RATE_LIMIT_WINDOW,
+    auth_max: process.env.AUTH_RATE_LIMIT_MAX,
+  },
   database: process.env.MONGODB_URI,
-  auth_token: process.env.AUTH_TOKEN,
   node_env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000
 };

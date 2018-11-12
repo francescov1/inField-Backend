@@ -8,6 +8,13 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
+    // farmer only gets family predictions, service up to 25 traps (api calls)
+    // agronomist gets family and species predictions, service up to 100 traps (api calls)
+    accountType: {
+      type: String,
+      enum: ['agronomist', 'famer'],
+      default: 'famer'
+    },
     email: {
       type: String,
       lowercase: true,
