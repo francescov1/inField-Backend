@@ -12,8 +12,8 @@ const UserSchema = new Schema(
     // agronomist gets family and species predictions, service up to 100 traps (api calls)
     accountType: {
       type: String,
-      enum: ['agronomist', 'famer'],
-      default: 'famer'
+      enum: ['agronomist', 'farmer'],
+      default: 'farmer'
     },
     email: {
       type: String,

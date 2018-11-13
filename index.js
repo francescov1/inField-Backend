@@ -27,13 +27,6 @@ const app = express();
 app.enable("trust proxy");
 app.use(helmet());
 app.use(logger(config.node_env === 'production' ? 'combined' : 'dev'));
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Expose-Headers", "auth-token");
-  return next();
-});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -41,6 +34,6 @@ app.use(bodyParser.json());
 router(app);
 
 app.listen(config.port, () => {
-  console.log('server listening on port ' + config.port + '...');
-  console.log('environment: ' + config.node_env)
+  console.log(`server listening on port ${config.port}...`);
+  console.log(`environment: ${config.node_env}`);
 });
