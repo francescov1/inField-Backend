@@ -1,6 +1,6 @@
 'use strict';
 const config = require("../config/main");
-const smsHelper = require("../helpers/smsHelper");
+const sms = require("../helpers/smsHelper");
 const mailer = require("../helpers/mailerHelper");
 const User = require("../models/user");
 
@@ -39,7 +39,7 @@ module.exports = {
       .catch(err => next(err));
   },
 
-  // TODO: test
+  // add phone to user
   addPhone: function(req, res, next) {
     // num must be 11 digit string
     const phone = req.body.phone;
@@ -60,6 +60,40 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  // verify phone with verification token
+  verifyPhone: function(req, res, next) {
+    const user = req.user;
+    const token = req.body.token;
+    if (user.phoneVerified)
+      return next(new NotAllowedError("Phone already verified"));
+    if (user.phoneVerificationToken !== token)
+      return next(new NotFoundError("Verification code invalid"));
+
+    user.phoneVerified = true;
+    user.phoneVerificationToken = undefined;
+    return user
+      .save()
+      .then(user => res.status(200).send({ success: true }))
+      .catch(err => next(err));
+  },
+
+  // resend phone verification token
+  resendPhoneVerification: function(req, res, next) {
+    const user = req.user;
+    if (!user.phone)
+      return next(new NotAllowedError("You have not added a phone yet"));
+    if (user.phoneVerified)
+      return next(new NotAllowedError("Your phone has already been verified"));
+
+    user.phoneVerificationToken = Math.floor(1000 + Math.random() * 9000);
+    return user
+      .save()
+      .then(user => sms.phoneVerification(user))
+      .then(() => res.status(201).send({ success: true }))
+      .catch(err => next(err));
+  },
+
+  // delete phone from user
   deletePhone: function(req, res, next) {
     let user = req.user;
     user.phone = undefined;

@@ -21,3 +21,4 @@ done <.env
 
 prodVars="$vars NODE_ENV=production"
 eb setenv $prodVars
+echo "Variables set: $prodVars"

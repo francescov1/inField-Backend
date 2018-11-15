@@ -9,16 +9,11 @@ module.exports = {
   phoneVerification: function(user) {
     if (config.node_env === "test") return;
 
-    twilio.messages.create({
-        body: `Your Infield ID verification code is ${user.phoneVerificationToken}`,
-        to: '+14039928497',
-        from: config.twilio.sender_id
-    })
-    .then((message) => {
-      console.log(message)
-      //console.log(message.sid)
-      return message
-    })
+    return twilio.messages.create({
+      body: `Your Infield ID verification code is ${user.phoneVerificationToken}`,
+      to: user.phone,
+      from: config.twilio.sender_id
+    });
   }
 
 };
