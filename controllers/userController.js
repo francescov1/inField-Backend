@@ -1,5 +1,7 @@
 'use strict';
 const config = require("../config/main");
+const smsHelper = require("../helpers/smsHelper");
+const mailer = require("../helpers/mailerHelper");
 const User = require("../models/user");
 
 const {
@@ -33,6 +35,38 @@ module.exports = {
     user = Object.assign(user, userEdits);
 
     return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
+  // TODO: test
+  addPhone: function(req, res, next) {
+    // num must be 11 digit string
+    const phone = req.body.phone;
+
+    let user = req.user;
+    if (user.phone)
+      return next(new NotAllowedError("You have already added a phone number"));
+
+    user.phone = phone;
+    user.phoneVerificationToken = Math.floor(1000 + Math.random() * 9000);
+
+    if (config.node_env === "test") user.phoneVerified = true;
+
+    return user
+      .save()
+      .then(user => sms.phoneVerification(user))
+      .then(() => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
+  deletePhone: function(req, res, next) {
+    let user = req.user;
+    user.phone = undefined;
+    user.phoneVerified = undefined;
+    user.phoneVerificationToken = undefined;
+    return user
+      .save()
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));
   },

@@ -1,6 +1,7 @@
 'use strict';
 const config = require('../config/main');
 const passport = require("../config/passport");
+const mailer = require("../helpers/mailerHelper");
 const jwt = require("jsonwebtoken");
 const uuidv4 = require("uuid/v4");
 const User = require("../models/user");
@@ -62,7 +63,7 @@ module.exports = {
 
         return newUser.save();
       })
-      //.then(user => mailer.accountVerification(user))
+      .then(user => mailer.accountVerification(user))
       .then(() => res.status(201).json({ success: true }))
       .catch(err => next(err));
   },
@@ -87,6 +88,7 @@ module.exports = {
     )(req, res, next);
   },
 
+  // TODO: test
   // request to reset a custom account password
   resetPasswordRequest: function(req, res, next) {
     const email = req.body.email;
@@ -106,11 +108,12 @@ module.exports = {
 
         return user.save();
       })
-      //.then(user => mailer.resetPassword(user))
+      .then(user => mailer.resetPassword(user))
       .then(() => res.status(201).send({ success: true }))
       .catch(err => next(err));
   },
 
+  // TODO: test
   // reset custom account password
   resetPassword: function(req, res, next) {
     const token = req.params.token;
@@ -151,6 +154,7 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  // TODO: test
   // resend account verification email
   resendVerificationEmail: function(req, res, next) {
     const email = req.body.email;
@@ -163,7 +167,7 @@ module.exports = {
         user.emailVerificationToken = uuidv4();
         return user.save();
       })
-    //  .then(user => mailer.accountVerification(user))
+      .then(user => mailer.accountVerification(user))
       .then(() => res.status(201).send({ success: true }))
       .catch(err => next(err));
   },

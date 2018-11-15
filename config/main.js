@@ -16,6 +16,15 @@ module.exports = {
     auth_window: process.env.AUTH_RATE_LIMIT_WINDOW,
     auth_max: process.env.AUTH_RATE_LIMIT_MAX,
   },
+  twilio: {
+    account_sid: process.env.PROD_TWILIO_ACCOUNT_SID,
+    auth_token: process.env.PROD_TWILIO_AUTH_TOKEN,
+    sender_id: process.env.TWILIO_SENDER_ID
+  },
+  mailer: {
+    username: process.env.MAILER_USERNAME,
+    password: process.env.MAILER_PASSWORD,
+  },
   database: process.env.MONGODB_URI,
   node_env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000
