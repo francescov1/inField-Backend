@@ -1,6 +1,4 @@
 'use strict';
-// TODO: figure out how to add variables to aws
-//if (process.env.NODE_ENV !== "production") require("dotenv").config();
 require("dotenv").config();
 module.exports = {
   model: {
@@ -26,6 +24,7 @@ module.exports = {
     password: process.env.MAILER_PASSWORD,
   },
   database: process.env.MONGODB_URI,
+  web_url: process.env.WEB_URL,
   node_env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000
 };

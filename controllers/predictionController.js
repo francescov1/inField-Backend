@@ -8,9 +8,11 @@ module.exports = {
 
   addPest: function(req, res, next) {
     const pest = new Pest({
-      species: req.body.species,
-      category: req.body.category,
-      latinName: req.body.latinName
+      family: req.body.family,
+      genus: req.body.genus,
+      cropsEffected: req.body.cropsEffected,
+      treatment: req.body.treatment,
+      location: req.body.location
     });
 
     return pest.save()
@@ -38,7 +40,12 @@ module.exports = {
     };
 
     return rp(options)
-      .then(results => res.status(200).send({ prediction: results }))
+      .then(results => {
+
+        // find bug in db
+
+        return res.status(200).send({ prediction: results })
+      })
       .catch(err => next(err));
   },
 
@@ -62,7 +69,12 @@ module.exports = {
     };
 
     return rp(options)
-      .then(results => res.status(200).send({ prediction: results }))
+      .then(results => {
+
+        // find bug in db
+
+        return res.status(200).send({ prediction: results })
+      })
       .catch(err => next(err));
   }
 };

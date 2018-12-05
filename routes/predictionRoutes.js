@@ -6,6 +6,7 @@ const upload = multer()
 var predictionRouter = express.Router();
 
 // upload pest test route
+// should be an admin route
 predictionRouter.post('/pest', predictionController.addPest);
 
 predictionRouter.use(upload.single('image'));
