@@ -20,7 +20,7 @@ module.exports = {
       .catch(err => next(err));
   },
 
-  classifyClickSpecies: function(req, res, next) {
+  classifyClickSpecies: async function(req, res, next) {
     if (!req.file)
       throw new NoDataError('No image provided');
 
@@ -39,17 +39,16 @@ module.exports = {
       headers: { 'content-type': 'multipart/form-data' }
     };
 
-    return rp(options)
-      .then(results => {
-
-        // find bug in db
-
-        return res.status(200).send({ prediction: results })
-      })
-      .catch(err => next(err));
+    try {
+      const species = await rp(options);
+      return res.status(200).send({ prediction: species })
+    }
+    catch(err) {
+      return next(err);
+    }
   },
 
-  classifyBeetleFamily: function(req, res, next) {
+  classifyBeetleFamily: async function(req, res, next) {
     if (!req.file)
       throw new NoDataError('No image provided');
 
@@ -68,13 +67,13 @@ module.exports = {
       headers: { 'content-type': 'multipart/form-data' }
     };
 
-    return rp(options)
-      .then(results => {
-
-        // find bug in db
-
-        return res.status(200).send({ prediction: results })
-      })
-      .catch(err => next(err));
+    try {
+      const prediction = await rp(options);
+      const pest = await Pest.findOne({ genus: prediction });
+      return res.status(200).send({ prediction, pest });
+    }
+    catch(err) {
+      return next(err);
+    }
   }
 };
