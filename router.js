@@ -2,10 +2,9 @@
 const config = require('./config/main');
 const express = require('express');
 const rateLimit = require("express-rate-limit");
-const authController = require('./controllers/authenticationController');
-const authRoutes = require("./routes/authenticationRoutes");
-const userRoutes = require("./routes/userRoutes");
-const predictionRoutes = require('./routes/predictionRoutes');
+const authController = require('./controllers/authentication');
+const authRoutes = require("./routes/authentication");
+const userRoutes = require("./routes/users");
 const errorMiddleware = require('./errors/middleware');
 
 module.exports = function(app) {
@@ -32,7 +31,6 @@ module.exports = function(app) {
   apiRouter.use(apiLimiter);
   apiRouter.use(authController.apiAuth)
   apiRouter.use('/users', userRoutes);
-  apiRouter.use('/predictions', predictionRoutes);
 
   // auth router
   const authRouter = express.Router();

@@ -23,6 +23,7 @@ module.exports = {
     let user = req.user;
     const userEdits = req.body;
     // TODO: add this as mongoose middleware
+    // TODO: manually set new stuff instead
     if (
       userEdits.emailVerified ||
       userEdits.salt ||

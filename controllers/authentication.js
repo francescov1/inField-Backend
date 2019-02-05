@@ -30,6 +30,7 @@ module.exports = {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
+    const accountType = req.body.accountType;
 
     if (!email || !password)
       return next(
@@ -43,22 +44,23 @@ module.exports = {
         if (existingUser)
           throw new NotAllowedError("That email address is already in use");
 
-        const verificationToken = uuidv4();
+        const emailVerificationToken = uuidv4();
 
         // TODO: decide if user is farmer or agronomist and set on user
         // could do middlware that checks what app is sending a request and sets users
         // type accordingly
         let newUser = new User({
-          email: email,
-          password: password,
-          firstName: firstName,
-          lastName: lastName,
-          emailVerificationToken: verificationToken
+          email,
+          password,
+          firstName,
+          lastName,
+          emailVerificationToken,
+          accountType
         });
 
         // set email verified for tests
         if (config.node_env === "test") newUser.emailVerified = true;
-        
+
         // TODO: get rid of
         newUser.emailVerified = true;
 
