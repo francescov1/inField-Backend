@@ -13,6 +13,20 @@ const UserSchema = new Schema(
       enum: ['agronomist', 'farmer'],
       default: 'farmer'
     },
+    specialties: [{
+      type: String,
+      enum: [
+        'beetles',
+        'ants'
+      ]
+    }],
+    regions: [{
+      type: String,
+      enum: [
+        'North America',
+        'South America'
+      ]
+    }],
     email: {
       type: String,
       lowercase: true,

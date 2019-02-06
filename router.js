@@ -5,6 +5,7 @@ const rateLimit = require("express-rate-limit");
 const authController = require('./controllers/authentication');
 const authRoutes = require("./routes/authentication");
 const userRoutes = require("./routes/users");
+const videoRoutes = require("./routes/video");
 const errorMiddleware = require('./errors/middleware');
 
 module.exports = function(app) {
@@ -31,7 +32,8 @@ module.exports = function(app) {
   apiRouter.use(apiLimiter);
   apiRouter.use(authController.apiAuth)
   apiRouter.use('/users', userRoutes);
-
+  apiRouter.use('/videos', videoRoutes);
+  
   // auth router
   const authRouter = express.Router();
   authRouter.use(authLimiter);
