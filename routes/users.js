@@ -13,4 +13,7 @@ router.delete("/me", controller.deleteMe);
 router.get("/:uid", controller.getUser);
 router.get("/search", controller.searchUsers);
 
+// TODO: test
+router.get("/rating", controller.getRating);
+
 module.exports = router;

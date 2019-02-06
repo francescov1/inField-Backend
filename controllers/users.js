@@ -3,6 +3,8 @@ const config = require("../config/main");
 const sms = require("../helpers/smsHelper");
 const mailer = require("../helpers/mailerHelper");
 const User = require("../models/user");
+const Rating = require('../models/rating');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const {
   NoDataError,
@@ -139,6 +141,27 @@ module.exports = {
     return User.find(query, "firstName lastName")
       .then(users => res.status(200).send(users))
       .catch(err => next(err));
+  },
+
+  getRating: function(req, res, next) {
+
+    const uid = req.user.id;
+
+    return Rating.aggregate([
+      { $match: { agronomist: ObjectId(uid) } },
+      {
+        $group: {
+          _id: null,
+          average: { $sum: "$rating" }
+        }
+      },
+      { $project: { _id: false, average: true } }
+    ])
+    .then(ratingArr => {
+      const rating = ratingArr[0] ? ratingArr[0].rating : null;
+      return res.status(200).send({ rating })
+    })
+    .catch(err => next(err));
   },
 
 };
