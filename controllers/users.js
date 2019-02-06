@@ -152,7 +152,7 @@ module.exports = {
       {
         $group: {
           _id: null,
-          average: { $sum: "$rating" }
+          average: { $avg: "$rating" }
         }
       },
       { $project: { _id: false, average: true } }
