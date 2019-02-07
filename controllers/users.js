@@ -145,23 +145,9 @@ module.exports = {
 
   getRating: function(req, res, next) {
 
-    const uid = req.user.id;
-
-    return Rating.aggregate([
-      { $match: { agronomist: ObjectId(uid) } },
-      {
-        $group: {
-          _id: null,
-          average: { $avg: "$rating" }
-        }
-      },
-      { $project: { _id: false, average: true } }
-    ])
-    .then(ratingArr => {
-      const rating = ratingArr[0] ? ratingArr[0].rating : null;
-      return res.status(200).send({ rating })
-    })
-    .catch(err => next(err));
+    return Rating.getRating(req.user.id)
+      .then(rating => res.status(200).send({ rating }))
+      .catch(err => next(err));
   },
 
 };

@@ -13,6 +13,7 @@ const UserSchema = new Schema(
       enum: ['agronomist', 'farmer'],
       default: 'farmer'
     },
+    // TODO: change to crops
     specialties: [{
       type: String,
       enum: [
