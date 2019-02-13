@@ -13,7 +13,9 @@ router.delete("/me", controller.deleteMe);
 router.get("/:uid", controller.getUser);
 router.get("/search", controller.searchUsers);
 
-// TODO: test
-router.get("/rating", controller.getRating);
+router.post("/me/skills", controller.addSkills);
+router.delete("/me/skills/regions", controller.removeRegion);
+router.delete("/me/skills/specialties", controller.removeSpecialty);
+router.get("/me/rating", controller.getRating);
 
 module.exports = router;

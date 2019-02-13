@@ -24,8 +24,6 @@ module.exports = {
     if (!req.body) return next(new NoDataError());
     let user = req.user;
     const userEdits = req.body;
-    // TODO: add this as mongoose middleware
-    // TODO: manually set new stuff instead
     if (
       userEdits.emailVerified ||
       userEdits.salt ||
@@ -37,6 +35,43 @@ module.exports = {
 
     user = Object.assign(user, userEdits);
 
+    return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
+  // add regions or specialties for agronomists
+  addSkills: function(req, res, next) {
+    const { specialties, regions } = req.body;
+    const user = req.user;
+
+    user.specialties.addToSet(...specialties);
+    user.regions.addToSet(...regions);
+    return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
+  // remove specialty for agronomists
+  removeSpecialty: function(req, res, next) {
+    const specialty = req.body.specialty;
+    const user = req.user;
+
+    const idx = user.specialties.indexOf(specialty);
+
+    if (idx > -1) user.specialties.splice(idx, 1);
+    return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
+  // remove region for agronomists
+  removeRegion: function(req, res, next) {
+    const region = req.body.region;
+    const user = req.user;
+
+    const idx = user.regions.indexOf(region);
+    if (idx > -1) user.regions.splice(idx, 1);
     return user.save()
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));
@@ -143,8 +178,8 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  // get a user's average rating
   getRating: function(req, res, next) {
-
     return Rating.getRating(req.user.id)
       .then(rating => res.status(200).send({ rating }))
       .catch(err => next(err));

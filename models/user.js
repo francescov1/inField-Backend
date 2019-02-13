@@ -13,19 +13,20 @@ const UserSchema = new Schema(
       enum: ['agronomist', 'farmer'],
       default: 'farmer'
     },
-    // TODO: change to crops
     specialties: [{
       type: String,
       enum: [
-        'beetles',
-        'ants'
+        'corn',
+        'barley',
+        'wheat'
       ]
     }],
     regions: [{
       type: String,
       enum: [
         'North America',
-        'South America'
+        'South America',
+        'Asia'
       ]
     }],
     email: {
@@ -106,7 +107,9 @@ UserSchema.methods.filterForClient = function() {
     emailVerified: this.emailVerified,
     phone: this.phone,
     phoneVerified: this.phoneVerified,
-    name: this.name
+    name: this.name,
+    regions: this.regions,
+    specialties: this.specialties
   };
 };
 

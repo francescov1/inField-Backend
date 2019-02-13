@@ -19,7 +19,7 @@ const RatingSchema = new Schema({
     max: 5,
     required: true
   }
-})
+});
 
 RatingSchema.statics.getRating = function(uid) {
   return this.aggregate([
