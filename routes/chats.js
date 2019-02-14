@@ -1,5 +1,5 @@
 'use strict';
-const controller = require('../controllers/video');
+const controller = require('../controllers/chats');
 const express = require('express');
 const router = express.Router();
 

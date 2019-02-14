@@ -1,8 +1,11 @@
 'use strict';
 const Rating = require('../models/rating');
+const Chat = require('../models/chat');
+const { NotAllowedError } = require('../errors/custom');
 
 module.exports = {
 
+  // TODO: test
   requestVideoChat: function(req, res, next) {
     const { region, specialty } = req.body;
 
@@ -23,19 +26,27 @@ module.exports = {
     })
   },
 
+  // TODO: test
   rateAgonomist: function(req, res, next) {
     const { chatId, rating } = req.body;
+    const uid = req.user.id;
 
-    // TODO: find chat
+    return Chat.findById(chatId)
+      .then(chat => {
+        if (chat.agronomistRated)
+          throw new NotAllowedError('Agronomist has already been rated for this chat');
 
-    const newRating = new Rating({
-      rating,
-      agronomist,
-      user: req.user
-    });
+        const newRating = new Rating({
+          rating: rating,
+          agronomist: chat.agronomist,
+          user: uid
+        });
 
-    return rating.save()
-      .then(rating => res.status(200)).send({ success: true })
+        chat.agronomistRated = true;
+
+        return Promise.all([newRating.save(), chat.save()])
+      })
+      .then(([rating, chat]) => res.status(200)).send({ success: true })
       .catch(err => next(err));
   }
 }
