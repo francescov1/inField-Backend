@@ -1,7 +1,7 @@
 "use strict";
 const passport = require("passport");
 const User = require("../models/user");
-const config = require("./main");
+const config = require("./");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const LocalStrategy = require("passport-local");

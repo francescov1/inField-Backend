@@ -1,5 +1,5 @@
 "use strict";
-const config = require("./main");
+const config = require("./");
 const nodemailer = require("nodemailer");
 
 module.exports = nodemailer.createTransport({

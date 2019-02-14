@@ -1,5 +1,5 @@
 "use strict";
-const config = require("../config/main");
+const config = require("../config");
 const twilio = require('../config/twilio');
 
 const { NotAllowedError } = require("../errors/custom");

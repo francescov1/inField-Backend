@@ -1,7 +1,7 @@
 'use strict';
 require("./helpers/date");
 Promise = require('bluebird');
-const config = require('./config/main');
+const config = require('./config');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
@@ -20,6 +20,9 @@ mongoose.connection.on("disconnected", () => {
 process.on("SIGINT", () => {
   mongoose.connection.close(() => process.exit(0));
 });
+
+// Run cron jobs
+require("./scripts/cron")();
 
 const app = express();
 

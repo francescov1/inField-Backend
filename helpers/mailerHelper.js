@@ -1,5 +1,5 @@
 "use strict";
-const config = require("../config/main");
+const config = require("../config");
 const mailer = require("../config/mailer");
 
 module.exports = {

@@ -1,5 +1,5 @@
 'use strict';
-const config = require("../config/main");
+const config = require("../config");
 const sms = require("../helpers/smsHelper");
 const mailer = require("../helpers/mailerHelper");
 const User = require("../models/user");
@@ -176,13 +176,6 @@ module.exports = {
     return User.find(query, "firstName lastName")
       .then(users => res.status(200).send(users))
       .catch(err => next(err));
-  },
-
-  // get a user's average rating
-  getRating: function(req, res, next) {
-    return Rating.getRating(req.user.id)
-      .then(rating => res.status(200).send({ rating }))
-      .catch(err => next(err));
-  },
+  }
 
 };

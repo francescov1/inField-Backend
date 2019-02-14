@@ -13,6 +13,7 @@ const UserSchema = new Schema(
       enum: ['agronomist', 'farmer'],
       default: 'farmer'
     },
+    rating: Number,
     specialties: [{
       type: String,
       enum: [
@@ -109,7 +110,9 @@ UserSchema.methods.filterForClient = function() {
     phoneVerified: this.phoneVerified,
     name: this.name,
     regions: this.regions,
-    specialties: this.specialties
+    specialties: this.specialties,
+    accountType: this.accountType,
+    rating: this.rating
   };
 };
 

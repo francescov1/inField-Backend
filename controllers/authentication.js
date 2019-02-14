@@ -1,5 +1,5 @@
 'use strict';
-const config = require('../config/main');
+const config = require('../config');
 const passport = require("../config/passport");
 const mailer = require("../helpers/mailerHelper");
 const jwt = require("jsonwebtoken");

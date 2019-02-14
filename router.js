@@ -1,5 +1,5 @@
 'use strict';
-const config = require('./config/main');
+const config = require('./config');
 const express = require('express');
 const rateLimit = require("express-rate-limit");
 const authController = require('./controllers/authentication');
@@ -33,7 +33,7 @@ module.exports = function(app) {
   apiRouter.use(authController.apiAuth)
   apiRouter.use('/users', userRoutes);
   apiRouter.use('/videos', videoRoutes);
-  
+
   // auth router
   const authRouter = express.Router();
   authRouter.use(authLimiter);

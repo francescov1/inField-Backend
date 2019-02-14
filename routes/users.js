@@ -16,6 +16,5 @@ router.get("/search", controller.searchUsers);
 router.post("/me/skills", controller.addSkills);
 router.delete("/me/skills/regions", controller.removeRegion);
 router.delete("/me/skills/specialties", controller.removeSpecialty);
-router.get("/me/rating", controller.getRating);
 
 module.exports = router;
