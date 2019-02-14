@@ -6,8 +6,15 @@ const jwt = require("jsonwebtoken");
 const uuidv4 = require("uuid/v4");
 const User = require("../models/user");
 
-const { UnauthorizedError, JwtExpiredError, InvalidArgumentError, NotAllowedError, NotFoundError } = require('../errors/custom');
+const {
+  UnauthorizedError,
+  JwtExpiredError,
+  InvalidArgumentError,
+  NotAllowedError,
+  NotFoundError
+} = require('../errors');
 
+// all authentication functionality
 module.exports = {
 
   // verify api token

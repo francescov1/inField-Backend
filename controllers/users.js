@@ -11,8 +11,9 @@ const {
   NotFoundError,
   InvalidArgumentError,
   NotAllowedError
-} = require("../errors/custom.js");
+} = require("../errors");
 
+// all user functionality
 module.exports = {
   // get me
   getMe: function(req, res, next) {

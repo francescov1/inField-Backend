@@ -1,8 +1,9 @@
 'use strict';
 const Rating = require('../models/rating');
 const Chat = require('../models/chat');
-const { NotAllowedError } = require('../errors/custom');
+const { NotAllowedError } = require('../errors');
 
+// all functionality for video chats between agronomists and users
 module.exports = {
 
   // TODO: test
