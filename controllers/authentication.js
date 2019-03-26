@@ -69,7 +69,7 @@ module.exports = {
         if (config.node_env === "test") newUser.emailVerified = true;
 
         // TODO: get rid of
-        newUser.emailVerified = true;
+        //newUser.emailVerified = true;
 
         return newUser.save();
       })

@@ -42,26 +42,12 @@ const UserSchema = new Schema(
       default: false
     },
     emailVerificationToken: String,
-    phone: {
-      type: String,
-      match: /^\d{11}$/
-    },
-    phoneVerified: {
-      type: Boolean,
-      default: false
-    },
-    phoneVerificationToken: String,
     password: String,
     salt: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    // TODO: input locations of models in db with coordinates, then find closest one when doing a query
-    coordinates: {
-      type: [Number],
-      index: "2dsphere"
-    },
+    lastName: { type: String, required: true }
   },
   {
     timestamps: true
@@ -106,8 +92,6 @@ UserSchema.methods.filterForClient = function() {
     _id: this._id,
     email: this.email,
     emailVerified: this.emailVerified,
-    phone: this.phone,
-    phoneVerified: this.phoneVerified,
     name: this.name,
     regions: this.regions,
     specialties: this.specialties,
