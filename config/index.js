@@ -25,6 +25,7 @@ module.exports = {
   },
   database: process.env.MONGODB_URI,
   web_url: process.env.WEB_URL,
+  api_url: process.env.API_URL,
   node_env: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000
 };
