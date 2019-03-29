@@ -44,6 +44,20 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  getAvailableSpecialties: function(req, res, next) {
+    if (req.user.accountType !== "agronomist")
+      throw new NotAllowedError("You must have an agronomist account")
+
+    return res.status(200).send({ specialties: ['corn', 'barley', 'wheat'] });
+  },
+
+  getAvailableRegions: function(req, res, next) {
+    if (req.user.accountType !== "agronomist")
+      throw new NotAllowedError("You must have an agronomist account")
+
+    return res.status(200).send({ regions: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'] });
+  },
+
   // TODO: get available skills that can be added
 
   // add regions or specialties for agronomists

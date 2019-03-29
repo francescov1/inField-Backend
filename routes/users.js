@@ -13,4 +13,7 @@ router.post("/me/skills", controller.addSkills);
 router.delete("/me/skills/regions", controller.removeRegion);
 router.delete("/me/skills/specialties", controller.removeSpecialty);
 
+router.get("/skills/regions", controller.getAvailableRegions);
+router.get("/skills/specialties", controller.getAvailableSpecialties);
+
 module.exports = router;

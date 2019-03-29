@@ -16,30 +16,11 @@ const UserSchema = new Schema(
     rating: Number,
     specialties: [{
       type: String,
-      enum: [
-        'corn',
-        'barley',
-        'wheat'
-      ]
+      enum: ['corn', 'barley', 'wheat']
     }],
     regions: [{
       type: String,
-      enum: [
-        'ON',
-        'BC',
-        'QC',
-        "AB",
-        'NS',
-        'NB',
-        'NL',
-        'PE',
-        'MB',
-        'SK',
-        'AB',
-        'YT',
-        'NT',
-        'NU'
-      ]
+      enum: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU']
     }],
     dob: {
       day: { type: Number, required: true },

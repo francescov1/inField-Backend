@@ -14,7 +14,7 @@ module.exports = {
         user.name
       },<br/><br/>Welcome to InField ID! Please click the URL below to verify your new InField ID account and get started with our services.</br>${
         config.api_url
-      }/verifyEmail/${
+      }/auth/verifyEmail/${
         user.emailVerificationToken
       }<br/><br/>Best,<br/>InField ID`
     });
@@ -31,7 +31,7 @@ module.exports = {
         user.name
       },<br/><br/>You are receiving this email because you have requested to reset your InField ID account password. Please click the link below to do so now, the link will expire in one day.<br/>${
         config.api
-      }/resetPassword/${
+      }/auth/resetPassword/${
         user.resetPasswordToken
       }<br/><br/>If you did not request this, please ignore this email.<br/><br/>Best,<br/>InField ID`
     });
