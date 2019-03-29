@@ -25,11 +25,27 @@ const UserSchema = new Schema(
     regions: [{
       type: String,
       enum: [
-        'North America',
-        'South America',
-        'Asia'
+        'ON',
+        'BC',
+        'QC',
+        "AB",
+        'NS',
+        'NB',
+        'NL',
+        'PE',
+        'MB',
+        'SK',
+        'AB',
+        'YT',
+        'NT',
+        'NU'
       ]
     }],
+    dob: {
+      day: { type: Number, required: true },
+      month: { type: Number, required: true },
+      year: { type: Number, required: true },
+    },
     email: {
       type: String,
       lowercase: true,
@@ -93,6 +109,7 @@ UserSchema.methods.filterForClient = function() {
     email: this.email,
     emailVerified: this.emailVerified,
     name: this.name,
+    dob: this.dob,
     regions: this.regions,
     specialties: this.specialties,
     accountType: this.accountType,

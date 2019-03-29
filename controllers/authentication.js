@@ -37,6 +37,7 @@ module.exports = {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
+    const dob = req.body.dob;
     const accountType = req.body.accountType;
 
     if (!email || !password)
@@ -62,19 +63,22 @@ module.exports = {
           firstName,
           lastName,
           emailVerificationToken,
+          dob,
           accountType
         });
 
         // set email verified for tests
         if (config.node_env === "test") newUser.emailVerified = true;
 
-        // TODO: get rid of
-        //newUser.emailVerified = true;
-
+        mailer.accountVerification(user);
         return newUser.save();
       })
-      .then(user => mailer.accountVerification(user))
-      .then(() => res.status(201).json({ success: true }))
+      .then(user => res.status(201).send({
+        token: "JWT " + jwt.sign({ _id: user._id }, config.jwt.secret, {
+          expiresIn: Number(config.jwt.expiry)
+        }),
+        user: user.filterForClient()
+      }))
       .catch(err => next(err));
   },
 
