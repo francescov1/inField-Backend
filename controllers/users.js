@@ -58,8 +58,6 @@ module.exports = {
     return res.status(200).send({ regions: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'] });
   },
 
-  // TODO: get available skills that can be added
-
   // add regions or specialties for agronomists
   addSkills: function(req, res, next) {
     const { specialties, regions } = req.body;

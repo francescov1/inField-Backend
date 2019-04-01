@@ -23,7 +23,7 @@ module.exports = {
       if (err) return next(err);
       if (info && info.name === "TokenExpiredError")
         return next(new JwtExpiredError());
-      if (!user) return next(new UnauthorizedError());
+      if (!user) return next(new UnauthorizedError("User Not Found"));
 
       req.user = user;
       return next();
