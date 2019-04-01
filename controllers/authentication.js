@@ -70,15 +70,18 @@ module.exports = {
         // set email verified for tests
         if (config.node_env === "test") newUser.emailVerified = true;
 
-        mailer.accountVerification(user);
         return newUser.save();
       })
-      .then(user => res.status(201).send({
-        token: "JWT " + jwt.sign({ _id: user._id }, config.jwt.secret, {
-          expiresIn: Number(config.jwt.expiry)
-        }),
-        user: user.filterForClient()
-      }))
+      .then(user => {
+        mailer.accountVerification(user);
+        
+        return res.status(201).send({
+          token: "JWT " + jwt.sign({ _id: user._id }, config.jwt.secret, {
+            expiresIn: Number(config.jwt.expiry)
+          }),
+          user: user.filterForClient()
+        })
+      })
       .catch(err => next(err));
   },
 
