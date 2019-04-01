@@ -70,6 +70,17 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  addDefaultRegion: function(req, res, next) {
+    const user = req.user;
+    if (user.accountType !== "farmer")
+      throw new NotAllowedError("You must have a farmer account");
+
+    user.defaultRegion = req.body.region;
+    return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
+  },
+
   // remove specialty for agronomists
   removeSpecialty: function(req, res, next) {
     const specialty = req.body.specialty;

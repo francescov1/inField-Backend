@@ -3,6 +3,17 @@
 // error handling middlewear
 function errorHandler(err, req, res, next) {
 
+  if (err.name === "ValidationError") {
+    let message = "";
+    for (let key in err.errors) {
+      message += err.errors[key].message + " ";
+    }
+
+    err.message = message.trim();
+    err.type = "NotAllowedError";
+    status = 405;
+  }
+
   console.error(err.stack);
   var status = err.status || err.statusCode || err.code;
   return res.status(status >= 100 && status < 600 ? status : 500).send({

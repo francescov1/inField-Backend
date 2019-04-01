@@ -4,6 +4,8 @@ const uniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const allowedRegions = ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'];
+
 // ============================ User Schema ============================ //
 
 const UserSchema = new Schema(
@@ -20,8 +22,12 @@ const UserSchema = new Schema(
     }],
     regions: [{
       type: String,
-      enum: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU']
+      enum: allowedRegions
     }],
+    defaultRegion: {
+      type: String,
+      enum: allowedRegions
+    },
     dob: {
       day: { type: Number, required: true },
       month: { type: Number, required: true },
@@ -93,6 +99,7 @@ UserSchema.methods.filterForClient = function() {
     dob: this.dob,
     regions: this.regions,
     specialties: this.specialties,
+    defaultRegion: this.defaultRegion,
     accountType: this.accountType,
     rating: this.rating
   };
