@@ -44,6 +44,7 @@ module.exports = {
       .catch(err => next(err));
   },
 
+  // for agronomists
   getAvailableSpecialties: function(req, res, next) {
     if (req.user.accountType !== "agronomist")
       throw new NotAllowedError("You must have an agronomist account")
@@ -51,11 +52,21 @@ module.exports = {
     return res.status(200).send({ specialties: ['corn', 'barley', 'wheat'] });
   },
 
+  // for both farmers and agronomistss
   getAvailableRegions: function(req, res, next) {
-    if (req.user.accountType !== "agronomist")
-      throw new NotAllowedError("You must have an agronomist account")
-
     return res.status(200).send({ regions: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'] });
+  },
+
+  // for farmers
+  addDefaultRegion: function(req, res, next) {
+    const user = req.user;
+    if (user.accountType !== "farmer")
+      throw new NotAllowedError("You must have a farmer account");
+
+    user.defaultRegion = req.body.region;
+    return user.save()
+      .then(user => res.status(201).send(user.filterForClient()))
+      .catch(err => next(err));
   },
 
   // add regions or specialties for agronomists
@@ -65,17 +76,6 @@ module.exports = {
 
     user.specialties.addToSet(...specialties);
     user.regions.addToSet(...regions);
-    return user.save()
-      .then(user => res.status(201).send(user.filterForClient()))
-      .catch(err => next(err));
-  },
-
-  addDefaultRegion: function(req, res, next) {
-    const user = req.user;
-    if (user.accountType !== "farmer")
-      throw new NotAllowedError("You must have a farmer account");
-
-    user.defaultRegion = req.body.region;
     return user.save()
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));
