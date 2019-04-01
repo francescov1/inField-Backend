@@ -54,9 +54,6 @@ module.exports = {
 
         const emailVerificationToken = uuidv4();
 
-        // TODO: decide if user is farmer or agronomist and set on user
-        // could do middlware that checks what app is sending a request and sets users
-        // type accordingly
         let newUser = new User({
           email,
           password,
@@ -74,7 +71,7 @@ module.exports = {
       })
       .then(user => {
         mailer.accountVerification(user);
-        
+
         return res.status(201).send({
           token: "JWT " + jwt.sign({ _id: user._id }, config.jwt.secret, {
             expiresIn: Number(config.jwt.expiry)
