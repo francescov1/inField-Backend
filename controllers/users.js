@@ -5,6 +5,9 @@ const mailer = require("../helpers/mailerHelper");
 const User = require("../models/user");
 const Rating = require('../models/rating');
 const ObjectId = require('mongoose').Types.ObjectId;
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const s3 = require("../config/aws").s3;
 
 const {
   NoDataError,
@@ -105,6 +108,51 @@ module.exports = {
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));
   },
+
+  uploadLegalDoc: [
+    function(req, res, next) {
+      //if (req.user.accountType !== "agronomist")
+      //  throw new NotAllowedError("Must have an agronomist account");
+      if (req.query.type !== "credentials" && req.query.type !== "insurance")
+        throw new InvalidArgumentError("Legal document type is invalid");
+
+      return next();
+    },
+
+    // aws image upload middleware
+    multer({
+      storage: multerS3({
+        s3: s3,
+        bucket: config.aws.s3_bucket_name,
+        key: (req, file, cb) => {
+          cb(
+            null,
+            `users/${req.user.id}/legal/${req.query.type}-${file.originalname}`
+          );
+        }
+      })
+    }).single("image"),
+
+    function(req, res, next) {
+      if (!req.file) throw new NotFoundError("No photo found");
+      const user = req.user;
+      const type = req.query.type;
+
+      // if this fails, simply means photo was already deleted
+      if (user.legal && user.legal[type]) {
+        s3.deleteObject({
+          Key: user.legal[type].split("amazonaws.com/")[1],
+          Bucket: config.aws.s3_bucket_name
+        }).promise();
+      }
+
+      user.legal[type] = req.file.location
+
+      return user.save()
+        .then(user => res.status(201).send({ legal: user.legal }))
+        .catch(err => next(err));
+    }
+  ],
 
   // delete user
   deleteMe: function(req, res, next) {

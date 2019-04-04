@@ -66,7 +66,6 @@ module.exports = {
 
         // set email verified for tests
         if (config.node_env === "test") newUser.emailVerified = true;
-
         return newUser.save();
       })
       .then(user => {

@@ -23,6 +23,13 @@ module.exports = {
     username: process.env.MAILER_USERNAME,
     password: process.env.MAILER_PASSWORD,
   },
+  aws: {
+    version: process.env.AWS_VERSION,
+    region: process.env.AWS_REGION,
+    access_key_id: process.env.AWS_ACCESS_KEY_ID,
+    secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
+    s3_bucket_name: process.env.S3_BUCKET_NAME
+  },
   database: process.env.MONGODB_URI,
   web_url: process.env.WEB_URL,
   api_url: process.env.API_URL,

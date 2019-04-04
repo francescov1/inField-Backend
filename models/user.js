@@ -50,7 +50,11 @@ const UserSchema = new Schema(
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true }
+    lastName: { type: String, required: true },
+    legal: {
+      credentials: String,
+      insurance: String
+    }
   },
   {
     timestamps: true
