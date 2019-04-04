@@ -111,8 +111,8 @@ module.exports = {
 
   uploadLegalDoc: [
     function(req, res, next) {
-      //if (req.user.accountType !== "agronomist")
-      //  throw new NotAllowedError("Must have an agronomist account");
+      if (req.user.accountType !== "agronomist")
+        throw new NotAllowedError("Must have an agronomist account");
       if (req.query.type !== "credentials" && req.query.type !== "insurance")
         throw new InvalidArgumentError("Legal document type is invalid");
 
