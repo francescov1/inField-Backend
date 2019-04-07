@@ -49,9 +49,6 @@ module.exports = {
 
   // for agronomists
   getAvailableSpecialties: function(req, res, next) {
-    if (req.user.accountType !== "agronomist")
-      throw new NotAllowedError("You must have an agronomist account")
-
     return res.status(200).send({ specialties: ['corn', 'barley', 'wheat'] });
   },
 
@@ -60,31 +57,21 @@ module.exports = {
     return res.status(200).send({ regions: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'] });
   },
 
-  // for farmers
-  addDefaultRegion: function(req, res, next) {
-    const user = req.user;
-    if (user.accountType !== "farmer")
-      throw new NotAllowedError("You must have a farmer account");
-
-    user.defaultRegion = req.body.region;
-    return user.save()
-      .then(user => res.status(201).send(user.filterForClient()))
-      .catch(err => next(err));
-  },
-
-  // add regions or specialties for agronomists
+  // add regions or specialties
   addSkills: function(req, res, next) {
     const { specialties, regions } = req.body;
     const user = req.user;
 
-    user.specialties.addToSet(...specialties);
-    user.regions.addToSet(...regions);
+    if (specialties)
+      user.specialties.addToSet(...specialties);
+    if (regions)
+      user.regions.addToSet(...regions);
     return user.save()
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));
   },
 
-  // remove specialty for agronomists
+  // remove specialty
   removeSpecialty: function(req, res, next) {
     const specialty = req.body.specialty;
     const user = req.user;
@@ -97,7 +84,7 @@ module.exports = {
       .catch(err => next(err));
   },
 
-  // remove region for agronomists
+  // remove region
   removeRegion: function(req, res, next) {
     const region = req.body.region;
     const user = req.user;

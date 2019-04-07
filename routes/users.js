@@ -11,10 +11,6 @@ router.get("/search", controller.searchUsers);
 
 router.get("/skills/regions", controller.getAvailableRegions);
 
-// for famers
-router.post("/me/region", controller.addDefaultRegion);
-
-// for agronomists
 router.get("/skills/specialties", controller.getAvailableSpecialties);
 router.post("/me/skills", controller.addSkills);
 router.delete("/me/skills/regions", controller.removeRegion);

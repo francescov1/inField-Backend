@@ -6,7 +6,10 @@ function errorHandler(err, req, res, next) {
   if (err.name === "ValidationError") {
     let message = "";
     for (let key in err.errors) {
-      message += err.errors[key].message + " ";
+      // temp fix for double errors
+      // TODO: handle htis better
+      if (message !== err.errors[key].message + " ")
+        message += err.errors[key].message + " ";
     }
 
     err.message = message.trim();

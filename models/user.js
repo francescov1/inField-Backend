@@ -16,18 +16,20 @@ const UserSchema = new Schema(
       default: 'farmer'
     },
     rating: Number,
+    // farmers can only have one 'default' specialty
+    // agronomists have no limit (everything they specialise in)
     specialties: [{
       type: String,
-      enum: ['corn', 'barley', 'wheat']
+      enum: ['corn', 'barley', 'wheat'],
+      validate: [validateSpecialties, 'Cannot have more than one default specialty']
     }],
+    // farmers can only have one 'default' region
+    // agronomists have no limit (everything they specialise in)
     regions: [{
       type: String,
-      enum: allowedRegions
+      enum: allowedRegions,
+      validate: [validateRegions, 'Cannot have more than one default region']
     }],
-    defaultRegion: {
-      type: String,
-      enum: allowedRegions
-    },
     dob: {
       day: { type: Number, required: true },
       month: { type: Number, required: true },
@@ -62,6 +64,18 @@ const UserSchema = new Schema(
 );
 
 UserSchema.plugin(uniqueValidator);
+
+function validateMaxAttendance(maxAttendance) {
+  return this.bounceAttendance ? maxAttendance >= this.bounceAttendance : true;
+}
+
+function validateSpecialties(specialty) {
+  return this.accountType === 'farmer' ? this.specialties.length <= 1 : true;
+}
+
+function validateRegions(region) {
+  return this.accountType === 'farmer' ? this.regions.length <= 1 : true;
+}
 
 // get and set virtual name property
 UserSchema.virtual("name")
