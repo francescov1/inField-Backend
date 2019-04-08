@@ -34,7 +34,7 @@ module.exports = {
       userEdits.resetPasswordToken ||
       userEdits.resetPasswordExpires ||
       userEdits.emailVerificationToken ||
-      userEdits.specialties ||
+      userEdits.crops ||
       userEdits.regions ||
       userEdits.rating
     )
@@ -48,8 +48,8 @@ module.exports = {
   },
 
   // for agronomists
-  getAvailableSpecialties: function(req, res, next) {
-    return res.status(200).send({ specialties: ['corn', 'barley', 'wheat'] });
+  getAvailableCrops: function(req, res, next) {
+    return res.status(200).send({ crops: ['corn', 'barley', 'wheat'] });
   },
 
   // for both farmers and agronomistss
@@ -57,13 +57,13 @@ module.exports = {
     return res.status(200).send({ regions: ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'SK', 'AB', 'YT', 'NT', 'NU'] });
   },
 
-  // add regions or specialties
+  // add regions or crops
   addSkills: function(req, res, next) {
-    const { specialties, regions } = req.body;
+    const { crops, regions } = req.body;
     const user = req.user;
 
-    if (specialties)
-      user.specialties.addToSet(...specialties);
+    if (crops)
+      user.crops.addToSet(...crops);
     if (regions)
       user.regions.addToSet(...regions);
     return user.save()
@@ -71,14 +71,14 @@ module.exports = {
       .catch(err => next(err));
   },
 
-  // remove specialty
-  removeSpecialty: function(req, res, next) {
-    const specialty = req.body.specialty;
+  // remove crop
+  removeCrop: function(req, res, next) {
+    const crop = req.body.crop;
     const user = req.user;
 
-    const idx = user.specialties.indexOf(specialty);
+    const idx = user.crops.indexOf(crop);
 
-    if (idx > -1) user.specialties.splice(idx, 1);
+    if (idx > -1) user.crops.splice(idx, 1);
     return user.save()
       .then(user => res.status(201).send(user.filterForClient()))
       .catch(err => next(err));

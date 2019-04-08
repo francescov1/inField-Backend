@@ -11,10 +11,10 @@ router.get("/search", controller.searchUsers);
 
 router.get("/skills/regions", controller.getAvailableRegions);
 
-router.get("/skills/specialties", controller.getAvailableSpecialties);
+router.get("/skills/crops", controller.getAvailableCrops);
 router.post("/me/skills", controller.addSkills);
 router.delete("/me/skills/regions", controller.removeRegion);
-router.delete("/me/skills/specialties", controller.removeSpecialty);
+router.delete("/me/skills/crops", controller.removeCrop);
 
 router.post("/me/legal", controller.uploadLegalDoc);
 

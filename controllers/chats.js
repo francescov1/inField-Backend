@@ -8,14 +8,14 @@ module.exports = {
 
   // TODO: test
   requestVideoChat: function(req, res, next) {
-    const { region, specialty } = req.body;
+    const { region, crop } = req.body;
 
     return User.aggregate([
       {
         $match: {
           accountType: "agronomist",
           regions: region,
-          specialties: specialty
+          crops: crop
         }
       }
     ])

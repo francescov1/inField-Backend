@@ -16,12 +16,10 @@ const UserSchema = new Schema(
       default: 'farmer'
     },
     rating: Number,
-    // farmers can only have one 'default' specialty
-    // agronomists have no limit (everything they specialise in)
-    specialties: [{
+    // farmers and agronomists have no limit (everything they specialise in)
+    crops: [{
       type: String,
-      enum: ['corn', 'barley', 'wheat'],
-      validate: [validateSpecialties, 'Cannot have more than one default specialty']
+      enum: ['corn', 'barley', 'wheat']
     }],
     // farmers can only have one 'default' region
     // agronomists have no limit (everything they specialise in)
@@ -69,10 +67,6 @@ function validateMaxAttendance(maxAttendance) {
   return this.bounceAttendance ? maxAttendance >= this.bounceAttendance : true;
 }
 
-function validateSpecialties(specialty) {
-  return this.accountType === 'farmer' ? this.specialties.length <= 1 : true;
-}
-
 function validateRegions(region) {
   return this.accountType === 'farmer' ? this.regions.length <= 1 : true;
 }
@@ -116,7 +110,7 @@ UserSchema.methods.filterForClient = function() {
     name: this.name,
     dob: this.dob,
     regions: this.regions,
-    specialties: this.specialties,
+    crops: this.crops,
     defaultRegion: this.defaultRegion,
     accountType: this.accountType,
     rating: this.rating

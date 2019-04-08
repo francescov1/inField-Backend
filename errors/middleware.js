@@ -14,7 +14,7 @@ function errorHandler(err, req, res, next) {
 
     err.message = message.trim();
     err.type = "NotAllowedError";
-    status = 405;
+    err.status = 405;
   }
 
   console.error(err.stack);
