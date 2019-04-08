@@ -111,7 +111,6 @@ UserSchema.methods.filterForClient = function() {
     dob: this.dob,
     regions: this.regions,
     crops: this.crops,
-    defaultRegion: this.defaultRegion,
     accountType: this.accountType,
     rating: this.rating
   };
