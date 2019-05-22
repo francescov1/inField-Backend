@@ -6,6 +6,7 @@ const authController = require('./controllers/authentication');
 const authRoutes = require("./routes/authentication");
 const userRoutes = require("./routes/users");
 const chatRoutes = require("./routes/chats");
+const paymentRoutes = require("./routes/payments");
 const errorMiddleware = require('./errors/middleware');
 
 module.exports = function(app) {
@@ -33,6 +34,7 @@ module.exports = function(app) {
   apiRouter.use(authController.apiAuth)
   apiRouter.use('/users', userRoutes);
   apiRouter.use('/chats', chatRoutes);
+  apiRouter.use('/payments', paymentRoutes);
 
   // auth router
   const authRouter = express.Router();

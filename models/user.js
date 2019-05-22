@@ -9,6 +9,8 @@ const allowedRegions = ['ON', 'BC', 'QC', "AB", 'NS', 'NB', 'NL', 'PE', 'MB', 'S
 
 // ============================ User Schema ============================ //
 
+// TODO: add phone number (especially for sales rep)
+
 const UserSchema = new Schema(
   {
     accountType: {
@@ -55,6 +57,10 @@ const UserSchema = new Schema(
     legal: {
       credentials: String,
       insurance: String
+    },
+    stripe: {
+      customerId: String,
+      connectId: String
     },
     // company for sales reps
     company: String,
@@ -113,7 +119,7 @@ UserSchema.pre("save", function(next) {
       metadata: { database_id: this.id }
     })
     .then(stripeAcct => {
-      this.credentials.customerId = stripeAcct.id;
+      this.stripe.customerId = stripeAcct.id;
       return next();
     })
     .catch(err => next(err));
@@ -149,7 +155,8 @@ UserSchema.methods.filterForClient = function() {
     regions: this.regions,
     crops: this.crops,
     accountType: this.accountType,
-    rating: this.rating
+    rating: this.rating,
+    company: this.company
   };
 };
 
@@ -200,7 +207,7 @@ UserSchema.methods.getCardsWithDefault = function() {
   }
 
   return stripe.customers
-    .retrieve(this.credentials.customerId)
+    .retrieve(this.stripe.customerId)
     .then(customer => {
       cards = cards.map(card => {
         if (card._id === customer.default_source) {
@@ -226,7 +233,7 @@ UserSchema.methods.getBanksWithDefault = function() {
   }
 
   return stripe.accounts
-    .listExternalAccounts(this.credentials.connectId, {
+    .listExternalAccounts(this.stripe.connectId, {
       object: "bank_account"
     })
     .then(stripeBanks => {
