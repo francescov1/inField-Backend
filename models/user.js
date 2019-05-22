@@ -1,4 +1,5 @@
 "use strict";
+const stripe = require('../config/stripe');
 const crypto = require("crypto");
 const uniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
@@ -12,7 +13,7 @@ const UserSchema = new Schema(
   {
     accountType: {
       type: String,
-      enum: ['agronomist', 'farmer'],
+      enum: ['agronomist', 'farmer', 'salesRep'],
       default: 'farmer'
     },
     rating: Number,
@@ -21,7 +22,7 @@ const UserSchema = new Schema(
       type: String,
       enum: ['corn', 'barley', 'wheat']
     }],
-    // farmers can only have one 'default' region
+    // farmers and sales reps can only have one 'default' region
     // agronomists have no limit (everything they specialise in)
     regions: [{
       type: String,
@@ -54,7 +55,24 @@ const UserSchema = new Schema(
     legal: {
       credentials: String,
       insurance: String
-    }
+    },
+    // company for sales reps
+    company: String,
+    cards: [{
+      _id: { type: String, required: true },
+      card_holder_name: String,
+      brand: { type: String, required: true },
+      exp: { type: Date, required: true },
+      funding: { type: String, required: true },
+      last4: { type: String, required: true }
+    }],
+    banks: [{
+      _id: { type: String, required: true },
+      account_holder_name: String,
+      bankName: { type: String, required: true },
+      routing: { type: String, required: true },
+      last4: { type: String, required: true }
+    }],
   },
   {
     timestamps: true
@@ -68,7 +86,10 @@ function validateMaxAttendance(maxAttendance) {
 }
 
 function validateRegions(region) {
-  return this.accountType === 'farmer' ? this.regions.length <= 1 : true;
+  if (this.accountType === 'farmer' || this.accountType === 'salesRep')
+    return this.regions.length <= 1;
+  else
+    return true;
 }
 
 // get and set virtual name property
@@ -81,6 +102,22 @@ UserSchema.virtual("name")
     this.firstName = names[0];
     this.lastName = names[names.length - 1];
   });
+
+// create stripe account
+UserSchema.pre("save", function(next) {
+  if (!this.isNew) return next();
+
+  return stripe.customers
+    .create({
+      email: this.email,
+      metadata: { database_id: this.id }
+    })
+    .then(stripeAcct => {
+      this.credentials.customerId = stripeAcct.id;
+      return next();
+    })
+    .catch(err => next(err));
+});
 
 // encrypt password before saving
 UserSchema.pre("save", function(next) {
@@ -114,6 +151,100 @@ UserSchema.methods.filterForClient = function() {
     accountType: this.accountType,
     rating: this.rating
   };
+};
+
+
+UserSchema.methods.saveCard = function(card) {
+  this.cards.push({
+    _id: card.id,
+    card_holder_name: card.name,
+    brand: card.brand,
+    exp: new Date(card.exp_year, card.exp_month - 1),
+    funding: card.funding,
+    last4: card.last4
+  });
+
+  return this.save().then(user => user.cards);
+};
+
+UserSchema.methods.deleteCard = function(cardId) {
+  this.cards.pull(cardId);
+  return this.save().then(user => user.cards);
+};
+
+UserSchema.methods.saveBank = function(bank) {
+  this.banks.push({
+    _id: bank.id,
+    account_holder_name: bank.account_holder_name,
+    bankName: bank.bank_name,
+    routing: bank.routing_number,
+    last4: bank.last4
+  });
+
+  return this.save().then(user => user.banks);
+};
+
+UserSchema.methods.deleteBank = function(bankAcctId) {
+  this.banks.pull(bankAcctId);
+  return this.save().then(user => user.banks);
+};
+
+UserSchema.methods.getCardsWithDefault = function() {
+  let cards = this.cards;
+
+  if (cards.length === 0) return Promise.resolve([]);
+  else if (cards.length === 1) {
+    cards[0] = cards[0].toObject();
+    cards[0].default = true;
+    return Promise.resolve(cards);
+  }
+
+  return stripe.customers
+    .retrieve(this.credentials.customerId)
+    .then(customer => {
+      cards = cards.map(card => {
+        if (card._id === customer.default_source) {
+          card = card.toObject();
+          card.default = true;
+        }
+
+        return card;
+      });
+
+      return cards;
+    });
+};
+
+UserSchema.methods.getBanksWithDefault = function() {
+  let banks = this.banks;
+
+  if (banks.length === 0) return Promise.all([]);
+  else if (banks.length === 1) {
+    banks[0] = banks[0].toObject();
+    banks[0].default = true;
+    return Promise.all(banks);
+  }
+
+  return stripe.accounts
+    .listExternalAccounts(this.credentials.connectId, {
+      object: "bank_account"
+    })
+    .then(stripeBanks => {
+      const defaultBankAcct = stripeBanks.data.filter(bankAcct => {
+        return bankAcct.default_for_currency === true;
+      })[0];
+
+      banks = banks.map(bank => {
+        if (defaultBankAcct && bank._id === defaultBankAcct.id) {
+          bank = bank.toObject();
+          bank.default = true;
+        }
+
+        return bank;
+      });
+
+      return banks;
+    });
 };
 
 module.exports = mongoose.model("User", UserSchema);

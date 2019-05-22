@@ -39,6 +39,7 @@ module.exports = {
     const password = req.body.password;
     const dob = req.body.dob;
     const accountType = req.body.accountType;
+    const company = req.body.company;
 
     if (!email || !password)
       return next(
@@ -61,7 +62,8 @@ module.exports = {
           lastName,
           emailVerificationToken,
           dob,
-          accountType
+          accountType,
+          company
         });
 
         // set email verified for tests

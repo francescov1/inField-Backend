@@ -14,6 +14,9 @@ module.exports = {
     auth_window: process.env.AUTH_RATE_LIMIT_WINDOW,
     auth_max: process.env.AUTH_RATE_LIMIT_MAX,
   },
+  stripe: {
+    api_key: process.env.STRIPE_API_KEY
+  },
   twilio: {
     account_sid: process.env.PROD_TWILIO_ACCOUNT_SID,
     auth_token: process.env.PROD_TWILIO_AUTH_TOKEN,
