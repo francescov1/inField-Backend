@@ -9,6 +9,7 @@ The original intention of inField's product was to identify various species of p
 
 The founders eventually decided to change the service to connect agronomists with farmers through chat and video. This enabled farmers to seek expert advice without the need for an agronomist to be in the same physical location.
 
+The backend is built using <strong>Node.js, MongoDB, Stripe, Twilio and Passport.js</strong>. Hosting was handled using <strong>AWS Elastic Beanstalk</strong>.
 
 ### Note
 
